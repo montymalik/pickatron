@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  pickatron:
+    build: .
+    container_name: pickatron-app
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pickatron.rule=Host(`pickatron.localhost`)"
+      - "traefik.http.routers.pickatron.entrypoints=web"
+      - "traefik.http.services.pickatron.loadbalancer.server.port=80"
