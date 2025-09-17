@@ -506,6 +506,15 @@
             transition: transform cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
+        .idle-drift {
+            animation: idleDrift 15s linear infinite;
+        }
+
+        @keyframes idleDrift {
+            from { transform: translateX(0px); }
+            to { transform: translateX(-1100px); }
+        }
+
         /* Particle effects */
         .particle {
             position: fixed;
@@ -831,6 +840,9 @@
             // Don't auto-update while spinning
             if (isSpinning) return;
             
+            // Stop drift during updates
+            stopIdleDrift();
+            
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(() => {
                 const currentOptions = getAllOptions();
@@ -949,6 +961,28 @@
             modal.classList.remove('show');
         }
 
+        // Idle drift functions
+        function startIdleDrift() {
+            const filmStrip = document.getElementById('filmStrip');
+            if (filmStrip && !isSpinning) {
+                // Remove any existing animation classes first
+                filmStrip.classList.remove('idle-drift');
+                
+                // Force a reflow to ensure the class removal takes effect
+                filmStrip.offsetHeight;
+                
+                // Add the idle drift animation
+                filmStrip.classList.add('idle-drift');
+            }
+        }
+
+        function stopIdleDrift() {
+            const filmStrip = document.getElementById('filmStrip');
+            if (filmStrip) {
+                filmStrip.classList.remove('idle-drift');
+            }
+        }
+
         function updateFilmStrip() {
             const rawChoices = getAllOptions();
             
@@ -1000,6 +1034,9 @@
             filmStrip.style.left = '0px';
             filmStrip.style.transform = 'translateX(0px)';
 
+            // Start the idle drift animation
+            startIdleDrift();
+
             document.getElementById('winnerText').textContent = `Ready to pick from ${choices.length} option${choices.length !== 1 ? 's' : ''}!`;
         }
 
@@ -1023,8 +1060,11 @@
             const containerRect = filmStrip.parentElement.getBoundingClientRect();
             const containerCenter = containerRect.width / 2;
             
+            // Stop the idle drift animation
+            stopIdleDrift();
+            
             // Remove any existing transitions and animations
-            filmStrip.classList.remove('spinning', 'momentum-spin');
+            filmStrip.classList.remove('spinning', 'momentum-spin', 'idle-drift');
             filmStrip.style.transition = 'none';
             
             // Get current position or start from 0
@@ -1121,6 +1161,9 @@
                             isSpinning = false;
                             spinBtn.disabled = false;
                             spinBtn.innerHTML = '🚀 Launch Again';
+                            
+                            // Restart the idle drift after spin completes
+                            setTimeout(startIdleDrift, 500);
                         }, 1000);
                     }, 600);
                     
