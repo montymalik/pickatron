@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Flipper</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="coinflip.css">
+</head>
+<body>
+    <nav class="navigation">
+        <a href="index.html" class="nav-link">🎬 Pickatron</a>
+        <a href="coinflip.html" class="nav-link active">🪙 Coin Flipper</a>
+    </nav>
+
+    <h1>COIN FLIPPER</h1>
+    
+    <!-- Statistics Display -->
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-icon">👑</div>
+            <div class="stat-label">Heads</div>
+            <div class="stat-value" id="headsCount">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">⚔️</div>
+            <div class="stat-label">Tails</div>
+            <div class="stat-value" id="tailsCount">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-label">Total</div>
+            <div class="stat-value" id="totalCount">0</div>
+        </div>
+    </div>
+
+    <!-- Coin Display Area -->
+    <div class="coins-container" id="coinsContainer">
+        <!-- Coins will be dynamically generated here -->
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="coin-controls">
+            <label>Number of Coins</label>
+            <div class="coin-selector">
+                <button class="coin-btn" onclick="setCoinCount(1)">1</button>
+                <button class="coin-btn active" onclick="setCoinCount(2)">2</button>
+                <button class="coin-btn" onclick="setCoinCount(3)">3</button>
+                <button class="coin-btn" onclick="setCoinCount(4)">4</button>
+                <button class="coin-btn" onclick="setCoinCount(5)">5</button>
+                <button class="coin-btn" onclick="setCoinCount(6)">6</button>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="flip-btn" id="flipBtn" onclick="flipAllCoins()">
+                🚀 Flip Coins
+            </button>
+            <button class="reset-btn" onclick="resetCounters()">
+                🔄 Reset Stats
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Display -->
+    <div class="results-display" id="resultsDisplay">
+        <div class="results-text" id="resultsText">Select coins and flip to see results!</div>
+    </div>
+
+    <script src="coinflip.js"></script>
+</body>
+</html>

@@ -3,8 +3,11 @@ FROM nginx:alpine
 
 # Copy all web files to nginx default directory
 COPY index.html /usr/share/nginx/html/
+COPY coinflip.html /usr/share/nginx/html/
 COPY styles.css /usr/share/nginx/html/
+COPY coinflip.css /usr/share/nginx/html/
 COPY pickatron.js /usr/share/nginx/html/
+COPY coinflip.js /usr/share/nginx/html/
 
 # Copy custom nginx configuration (optional)
 COPY nginx.conf /etc/nginx/nginx.conf
