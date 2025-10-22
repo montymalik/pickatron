@@ -50,16 +50,15 @@ function createCoin(index) {
     coin.className = 'coin';
     coin.id = `coin-${index}`;
     
-    // Create heads face
-    const headsface = document.createElement('div');
-    headsface.className = 'coin-face coin-heads';
+    // Create a single face that will change content
+    const coinface = document.createElement('div');
+    coinface.className = 'coin-face coin-heads';
+    coinface.textContent = 'HEADS';
+    coinface.setAttribute('data-side', 'heads');
     
-    // Create tails face
-    const tailsface = document.createElement('div');
-    tailsface.className = 'coin-face coin-tails';
+    console.log('Creating coin', index, 'initial text:', coinface.textContent);
     
-    coin.appendChild(headsface);
-    coin.appendChild(tailsface);
+    coin.appendChild(coinface);
     
     // Add click handler for individual coin flip
     coin.addEventListener('click', () => {
@@ -181,13 +180,26 @@ function flipSingleCoin(coinIndex) {
 }
 
 function setFinalCoinState(coin, result) {
-    // Updated for faster animation - 16 flips total (2880 degrees)
-    // For heads: even multiples of 180 degrees 
-    // For tails: odd multiples of 180 degrees
+    // Get the coin face element
+    const coinFace = coin.querySelector('.coin-face');
     
-    const finalRotation = result === 'heads' ? 2880 : 2700; // 16 flips vs 15 flips
+    // Update the coin based on result
+    if (result === 'heads') {
+        coinFace.className = 'coin-face coin-heads';
+        coinFace.textContent = 'HEADS';
+        coinFace.setAttribute('data-side', 'heads');
+    } else {
+        coinFace.className = 'coin-face coin-tails';
+        coinFace.textContent = 'TAILS';
+        coinFace.setAttribute('data-side', 'tails');
+    }
+    
+    // Set final rotation (even number of half-turns for consistency)
+    const finalRotation = 1800; // 10 full rotations
     coin.style.transform = `translateY(0px) rotateX(${finalRotation}deg) scale(1)`;
     coin.style.filter = 'drop-shadow(0 5px 10px rgba(0,0,0,0.3))';
+    
+    console.log('Final coin state:', result, 'text:', coinFace.textContent);
 }
 
 // Results Processing
@@ -274,10 +286,18 @@ function resetCounters() {
     // Reset results display
     updateResultsDisplay(`${coinCount} coin${coinCount > 1 ? 's' : ''} ready to flip!`);
     
-    // Reset all coins to initial position (simple transform like hover effect)
+    // Reset all coins to initial position and heads side
     document.querySelectorAll('.coin').forEach(coin => {
         coin.style.transform = 'translateY(0px) rotateX(0deg) scale(1)';
         coin.style.filter = 'drop-shadow(0 5px 10px rgba(0,0,0,0.3))';
+        
+        // Reset to heads
+        const coinFace = coin.querySelector('.coin-face');
+        if (coinFace) {
+            coinFace.className = 'coin-face coin-heads';
+            coinFace.textContent = 'HEADS';
+            coinFace.setAttribute('data-side', 'heads');
+        }
     });
     
     // Create reset particle effect
