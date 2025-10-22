@@ -11,7 +11,8 @@ const CONFIG = {
     FLIP_DURATION_MAX: 2000, // Maximum flip time (2 seconds)
     CELEBRATION_DURATION: 1000,
     MAX_COINS: 6,
-    MIN_COINS: 1
+    MIN_COINS: 1,
+    STAGGER_DELAY: 150 // Delay between each coin start for cascading effect (milliseconds)
 };
 
 // Initialization
@@ -81,7 +82,7 @@ function flipAllCoins() {
     
     updateResultsDisplay('Coins are flipping...');
     
-    // Start all coins flipping with random delays and speeds
+    // Start all coins flipping with staggered delays
     const results = [];
     const coins = document.querySelectorAll('.coin');
     const flipTimings = [];
@@ -89,10 +90,9 @@ function flipAllCoins() {
     coins.forEach((coin, index) => {
         // Random speed class (1-5)
         const speedClass = `speed-${Math.floor(Math.random() * 5) + 1}`;
-        coin.classList.add('flipping', speedClass);
         
-        // Random start delay (0-300ms)
-        const startDelay = Math.random() * 300;
+        // Staggered start delay - each coin starts after the previous
+        const startDelay = index * CONFIG.STAGGER_DELAY;
         
         // Calculate duration based on speed class
         const duration = 1200 + (parseInt(speedClass.split('-')[1]) - 1) * 200; // 1.2s to 2.0s
@@ -104,7 +104,14 @@ function flipAllCoins() {
         });
         
         setTimeout(() => {
-            coin.classList.add('flipping', speedClass);
+            // Add a subtle anticipation effect before flipping
+            coin.style.transform = 'scale(1.1)';
+            coin.style.transition = 'transform 0.1s ease';
+            
+            setTimeout(() => {
+                coin.style.transform = 'scale(1)';
+                coin.classList.add('flipping', speedClass);
+            }, 50);
         }, startDelay);
         
         // Determine random result
@@ -144,15 +151,22 @@ function flipSingleCoin(coinIndex) {
     isFlipping = true;
     const coin = document.getElementById(`coin-${coinIndex}`);
     
-    // Random speed and delay for single coin flip
+    // Random speed and small delay for single coin flip
     const speedClass = `speed-${Math.floor(Math.random() * 5) + 1}`;
-    const startDelay = Math.random() * 200; // Smaller delay for single coin
+    const startDelay = Math.random() * 100; // Small random delay (0-100ms) for natural feel
     const duration = 1200 + (parseInt(speedClass.split('-')[1]) - 1) * 200;
     
     updateResultsDisplay('Coin is flipping...');
     
     setTimeout(() => {
-        coin.classList.add('flipping', speedClass);
+        // Add a subtle anticipation effect before flipping
+        coin.style.transform = 'scale(1.1)';
+        coin.style.transition = 'transform 0.1s ease';
+        
+        setTimeout(() => {
+            coin.style.transform = 'scale(1)';
+            coin.classList.add('flipping', speedClass);
+        }, 50);
     }, startDelay);
     
     // Determine random result
